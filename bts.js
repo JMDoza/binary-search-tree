@@ -1,4 +1,5 @@
 import { mergeSort } from "./mergesort.js";
+import { Queue } from "./queue.js";
 function Tree(array) {
   let root = null;
 
