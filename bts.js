@@ -120,6 +120,10 @@ function Tree(array) {
   };
 
   const levelOrder = (callback) => {
+    if (!callback) {
+      throw new Error("Callback Required");
+    }
+
     let queue = Queue();
     queue.enqueue(root);
     while (!queue.isEmpty()) {
@@ -132,9 +136,49 @@ function Tree(array) {
       if (current.rightNode) {
         queue.enqueue(current.rightNode);
       }
-
-      // console.log(queue.toString());
     }
+  };
+
+  const inOrder = (node, callback) => {
+    if (!callback) {
+      throw new Error("Callback Required");
+    }
+
+    if (!node) {
+      return;
+    }
+
+    inOrder(node.leftNode, callback);
+    callback(node);
+    inOrder(node.rightNode, callback);
+  };
+
+  const preOrder = (node, callback) => {
+    if (!callback) {
+      throw new Error("Callback Required");
+    }
+
+    if (!node) {
+      return;
+    }
+
+    callback(node);
+    preOrder(node.leftNode, callback);
+    preOrder(node.rightNode, callback);
+  };
+
+  const postOrder = (node, callback) => {
+    if (!callback) {
+      throw new Error("Callback Required");
+    }
+
+    if (!node) {
+      return;
+    }
+
+    postOrder(node.leftNode, callback);
+    postOrder(node.rightNode, callback);
+    callback(node);
   };
 
   if (array) {
@@ -143,7 +187,16 @@ function Tree(array) {
     root = buildTree(array, 0, array.length - 1);
   }
 
-  return { getRoot, insert, remove, find, levelOrder };
+  return {
+    getRoot,
+    insert,
+    remove,
+    find,
+    levelOrder,
+    inOrder,
+    preOrder,
+    postOrder,
+  };
 }
 
 function removeDupes(array) {
@@ -175,7 +228,7 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 let tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 prettyPrint(tree.getRoot());
 
-tree.levelOrder((node) => {
+tree.postOrder(tree.getRoot(), (node) => {
   console.log(node.data);
 });
 tree.remove(5);
