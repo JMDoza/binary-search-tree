@@ -5,8 +5,8 @@ function Tree(array) {
   const Node = (data) => {
     return {
       data,
-      leftNode: "null",
-      rightNode: "null",
+      leftNode: null,
+      rightNode: null,
     };
   };
 
@@ -27,13 +27,38 @@ function Tree(array) {
     return rootNode;
   };
 
+  const insert = (data) => {
+    let current = root;
+    while (current !== null) {
+      const left = current.leftNode;
+      const right = current.rightNode;
+
+      if (left && current.data > data) {
+        current = left;
+      } else if (right && current.data < data) {
+        current = right;
+      } else {
+        break;
+      }
+    }
+
+    if (current.data === data) {
+      return;
+    }
+
+    const newNode = Node(data);
+    current.data > data
+      ? (current.leftNode = newNode)
+      : (current.rightNode = newNode);
+  };
+
   if (array) {
     array = mergeSort(array);
     array = removeDupes(array);
     root = buildTree(array, 0, array.length - 1);
   }
 
-  return { getRoot };
+  return { getRoot, insert };
 }
 
 function removeDupes(array) {
@@ -63,4 +88,9 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 }
 
 let tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
+prettyPrint(tree.getRoot());
+tree.insert(2);
+tree.insert(20);
+tree.insert(21);
+tree.insert(22);
 prettyPrint(tree.getRoot());
