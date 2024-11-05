@@ -60,9 +60,14 @@ function Tree(array) {
       parent = current;
       if (data < current.data) {
         current = current.leftNode;
-      } else {
+      } else if (data > current.data) {
         current = current.rightNode;
       }
+    }
+
+    if (!current) {
+      console.log("Value does not exist!");
+      return;
     }
 
     const left = current.leftNode;
@@ -95,13 +100,31 @@ function Tree(array) {
     }
   };
 
+  const find = (value) => {
+    let current = root;
+    while (current && current.data !== value) {
+      if (value < current.data) {
+        current = current.leftNode;
+      } else if (value > current.data) {
+        current = current.rightNode;
+      }
+    }
+
+    if (!current) {
+      console.log("Value does not exist!");
+      return;
+    } else {
+      return current;
+    }
+  };
+
   if (array) {
     array = mergeSort(array);
     array = removeDupes(array);
     root = buildTree(array, 0, array.length - 1);
   }
 
-  return { getRoot, insert, remove };
+  return { getRoot, insert, remove, find };
 }
 
 function removeDupes(array) {
@@ -133,7 +156,10 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 let tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 prettyPrint(tree.getRoot());
 // tree.remove(67);
+console.log(tree.find(5));
 tree.remove(5);
+console.log(tree.find(5));
+
 // tree.remove(9);
 // tree.remove(23);
 prettyPrint(tree.getRoot());
