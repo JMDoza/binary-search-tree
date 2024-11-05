@@ -21,20 +21,39 @@ function Queue() {
       tail = newNode;
     } else {
       tail.nextNode = newNode;
+      tail = tail.nextNode;
     }
   };
 
   const dequeue = () => {
     size--;
     const temp = head;
-    head = head.nextNode;
+    head = head ? head.nextNode : null;
     temp.nextNode = null;
-    return temp;
+    return temp.data;
+  };
+
+  const isEmpty = () => {
+    return size === 0;
+  };
+
+  const toString = () => {
+    let current = head;
+    let string = "";
+
+    while (current !== null) {
+      string += `${current.data.data} -> `;
+      current = current.nextNode;
+    }
+
+    return string;
   };
 
   return {
     enqueue,
     dequeue,
+    isEmpty,
+    toString,
   };
 }
 

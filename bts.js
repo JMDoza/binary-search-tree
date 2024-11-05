@@ -119,13 +119,31 @@ function Tree(array) {
     }
   };
 
+  const levelOrder = (callback) => {
+    let queue = Queue();
+    queue.enqueue(root);
+    while (!queue.isEmpty()) {
+      let current = queue.dequeue();
+      callback(current);
+
+      if (current.leftNode) {
+        queue.enqueue(current.leftNode);
+      }
+      if (current.rightNode) {
+        queue.enqueue(current.rightNode);
+      }
+
+      // console.log(queue.toString());
+    }
+  };
+
   if (array) {
     array = mergeSort(array);
     array = removeDupes(array);
     root = buildTree(array, 0, array.length - 1);
   }
 
-  return { getRoot, insert, remove, find };
+  return { getRoot, insert, remove, find, levelOrder };
 }
 
 function removeDupes(array) {
@@ -156,11 +174,10 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 
 let tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 prettyPrint(tree.getRoot());
-// tree.remove(67);
-console.log(tree.find(5));
+
+tree.levelOrder((node) => {
+  console.log(node.data);
+});
 tree.remove(5);
 console.log(tree.find(5));
-
-// tree.remove(9);
-// tree.remove(23);
 prettyPrint(tree.getRoot());
