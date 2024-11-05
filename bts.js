@@ -52,13 +52,56 @@ function Tree(array) {
       : (current.rightNode = newNode);
   };
 
+  const remove = (data) => {
+    let parent = null;
+    let current = root;
+    // Find the node to remove and keep track of the parent
+    while (current && current.data !== data) {
+      parent = current;
+      if (data < current.data) {
+        current = current.leftNode;
+      } else {
+        current = current.rightNode;
+      }
+    }
+
+    const left = current.leftNode;
+    const right = current.rightNode;
+
+    if (!left && !right) {
+      parent.data > data ? (parent.leftNode = null) : (parent.rightNode = null);
+    } else if (!left || !right) {
+      if (parent.leftNode === current) {
+        parent.leftNode = current.rightNode;
+      } else {
+        parent.rightNode = current.rightNode;
+      }
+    } else {
+      let successorParent = current;
+      let successor = current.rightNode;
+
+      while (successor.leftNode) {
+        successorParent = successor;
+        successor = successor.leftNode;
+      }
+
+      current.data = successor.data;
+
+      if (successorParent.leftNode === successor) {
+        successorParent.leftNode = successor.rightNode;
+      } else {
+        successorParent.rightNode = successor.rightNode;
+      }
+    }
+  };
+
   if (array) {
     array = mergeSort(array);
     array = removeDupes(array);
     root = buildTree(array, 0, array.length - 1);
   }
 
-  return { getRoot, insert };
+  return { getRoot, insert, remove };
 }
 
 function removeDupes(array) {
@@ -89,8 +132,8 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 
 let tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 prettyPrint(tree.getRoot());
-tree.insert(2);
-tree.insert(20);
-tree.insert(21);
-tree.insert(22);
+// tree.remove(67);
+tree.remove(5);
+// tree.remove(9);
+// tree.remove(23);
 prettyPrint(tree.getRoot());
