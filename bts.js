@@ -230,6 +230,22 @@ function Tree(array) {
     return getHeightAndBalance(node);
   };
 
+  const rebalance = () => {
+    let nodeArray = [];
+    let nodeData = [];
+    inOrder(root, (node) => {
+      nodeArray.push(node);
+      nodeData.push(node.data);
+    });
+    root = null;
+    nodeArray.forEach((node) => {
+      node.leftNode = null;
+      node.rightNode = null;
+    });
+
+    root = buildTree(nodeData, 0, nodeData.length - 1);
+  };
+
   if (array) {
     array = mergeSort(array);
     array = removeDupes(array);
@@ -248,6 +264,7 @@ function Tree(array) {
     heightOf,
     depthOf,
     isBalanced,
+    rebalance,
   };
 }
 
@@ -278,10 +295,43 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 }
 
 let tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-// prettyPrint(tree.getRoot());
-for (let i = 0; i < 6; i++) {
+
+prettyPrint(tree.getRoot());
+console.log("===========================");
+console.log(tree.isBalanced(tree.getRoot()));
+for (let i = 0; i < 100; i++) {
   tree.insert(i);
 }
+console.log("===========================");
 prettyPrint(tree.getRoot());
-// const node = tree.find(10);
+console.log("===========================");
 console.log(tree.isBalanced(tree.getRoot()));
+console.log("===========================");
+tree.rebalance();
+prettyPrint(tree.getRoot());
+console.log("===========================");
+console.log(tree.isBalanced(tree.getRoot()));
+
+// let levelOrderString = "";
+// tree.levelOrder((node) => {
+//   levelOrderString += `${node.data} ->`;
+// });
+// console.log(levelOrderString + "\n");
+
+// let preOrderString = "";
+// tree.preOrder(tree.getRoot(), (node) => {
+//   preOrderString += `${node.data} ->`;
+// });
+// console.log(preOrderString + "\n");
+
+// let postOrderString = "";
+// tree.postOrder(tree.getRoot(), (node) => {
+//   postOrderString += `${node.data} ->`;
+// });
+// console.log(postOrderString + "\n");
+
+// let inOrderString = "";
+// tree.inOrder(tree.getRoot(), (node) => {
+//   inOrderString += `${node.data} ->`;
+// });
+// console.log(inOrderString + "\n");
