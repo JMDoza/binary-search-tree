@@ -191,6 +191,45 @@ function Tree(array) {
     return 1 + Math.max(leftHeight, rightHeight);
   };
 
+  const depthOf = (node) => {
+    if (!node) {
+      console.log("Not a valid Node");
+      return -1;
+    }
+
+    let current = root;
+    let depth = 0;
+    while (current && current !== node) {
+      if (node.data < current.data) {
+        current = current.leftNode;
+      } else if (node.data > current.data) {
+        current = current.rightNode;
+      }
+      depth++;
+    }
+
+    return depth;
+  };
+
+  const isBalanced = (node) => {
+    const getHeightAndBalance = (node) => {
+      if (!node) {
+        return 0;
+      }
+
+      const leftHeight = getHeightAndBalance(node.leftNode);
+      const rightHeight = getHeightAndBalance(node.rightNode);
+
+      const heightDiff = Math.abs(leftHeight - rightHeight);
+      if (leftHeight === -1 || rightHeight === -1 || heightDiff > 1) {
+        return -1;
+      }
+
+      return 1 + Math.max(leftHeight, rightHeight);
+    };
+    return getHeightAndBalance(node);
+  };
+
   if (array) {
     array = mergeSort(array);
     array = removeDupes(array);
@@ -207,6 +246,8 @@ function Tree(array) {
     preOrder,
     postOrder,
     heightOf,
+    depthOf,
+    isBalanced,
   };
 }
 
@@ -237,9 +278,10 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 }
 
 let tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
+// prettyPrint(tree.getRoot());
+for (let i = 0; i < 6; i++) {
+  tree.insert(i);
+}
 prettyPrint(tree.getRoot());
-tree.remove(5);
-console.log(tree.find(5));
-prettyPrint(tree.getRoot());
-const node = tree.find(8);
-console.log(tree.heightOf(node));
+// const node = tree.find(10);
+console.log(tree.isBalanced(tree.getRoot()));
