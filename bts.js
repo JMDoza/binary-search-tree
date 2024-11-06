@@ -181,6 +181,16 @@ function Tree(array) {
     callback(node);
   };
 
+  const heightOf = (node) => {
+    if (!node) {
+      return 0;
+    }
+    const leftHeight = heightOf(node.leftNode);
+    const rightHeight = heightOf(node.rightNode);
+
+    return 1 + Math.max(leftHeight, rightHeight);
+  };
+
   if (array) {
     array = mergeSort(array);
     array = removeDupes(array);
@@ -196,6 +206,7 @@ function Tree(array) {
     inOrder,
     preOrder,
     postOrder,
+    heightOf,
   };
 }
 
@@ -227,10 +238,8 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 
 let tree = Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 prettyPrint(tree.getRoot());
-
-tree.postOrder(tree.getRoot(), (node) => {
-  console.log(node.data);
-});
 tree.remove(5);
 console.log(tree.find(5));
 prettyPrint(tree.getRoot());
+const node = tree.find(8);
+console.log(tree.heightOf(node));
